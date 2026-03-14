@@ -12,6 +12,15 @@ const fontMono = Geist_Mono({
   variable: "--font-mono",
 })
 
+export const metadata = {
+  title: {
+    template: "%s | Wrdlift",
+    default: "Wrdlift",
+  },
+  description:
+    "  Write a quick entry each day and see your word count instantly. Get friendly, learner-focused suggestions to make your writing clearer, more natural, and more confident.",
+}
+
 export default function RootLayout({
   children,
 }: Readonly<{

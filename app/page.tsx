@@ -67,7 +67,7 @@ export default function Page() {
             Wrdlift
           </h1>
           <p className="mt-3 text-2xl font-semibold sm:text-3xl">
-            Level up your English journaling
+            Improve your English through journaling
           </p>
 
           <p className="mt-4 text-lg text-muted-foreground">

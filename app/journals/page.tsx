@@ -23,7 +23,7 @@ export default async function JournalsPage() {
             Your Journal
           </h1>
 
-          <div className="feature-card rounded-lg bg-indigo-50 p-6 shadow-xl">
+          <div className="feature-card rounded-lg bg-indigo-50 p-6 shadow-xl dark:bg-indigo-900/40">
             <JournalForm />
           </div>
         </div>
