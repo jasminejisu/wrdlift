@@ -36,6 +36,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
+import { Card } from "./ui/card"
 
 export function MyJournals({
   initialJournals = [],
@@ -118,159 +119,334 @@ export function MyJournals({
   }
 
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead className="w-30">
-            <div className="flex items-center gap-2.5">
-              <Checkbox
-                className="ml-1.5"
-                checked={
-                  allSelected ? true : someSelected ? "indeterminate" : false
-                }
-                onCheckedChange={() => toggleSelectAll()}
-              />
-              Select/All
-            </div>
-          </TableHead>
+    <div className="mx-auto w-full max-w-full px-4 md:max-w-6xl">
+      {/* Mobile list/cards */}
+      <div className="block md:hidden">
+        <div className="mb-4 flex items-center justify-between">
+          <div className="flex items-center gap-5">
+            <Checkbox
+              className="-ml-4 size-4"
+              checked={
+                allSelected ? true : someSelected ? "indeterminate" : false
+              }
+              onCheckedChange={() => toggleSelectAll()}
+            />
+            <span className="text-sm">Select All</span>
+          </div>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <div className="-mr-4 flex items-center gap-2">
+                <span className="text-sm">Delete</span>
+                <Button
+                  variant="destructive"
+                  className="size-6"
+                  disabled={selectedIds.size === 0}
+                >
+                  <Trash2 />
+                </Button>
+              </div>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>
+                  Are you sure deleting selected journals?
+                </AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action cannot be undone. This will permanently delete
+                  your journals from our servers.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={() => onDelete(Array.from(selectedIds))}
+                  disabled={selectedIds.size === 0 || isLoading}
+                >
+                  Delete
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </div>
 
-          <TableHead>Content</TableHead>
-          <TableHead className="w-36 text-left">Date</TableHead>
-          <TableHead className="w-16 text-right">
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <div className="flex items-center justify-end gap-2">
-                  Delete selected
-                  <Button
-                    variant="destructive"
-                    size="icon"
-                    className="size-8"
-                    disabled={selectedIds.size === 0}
-                  >
-                    <Trash2 />
-                  </Button>
+        <div className="space-y-3">
+          {initialJournals.map((j) => {
+            const shown = truncate(j.content)
+            const shownMobile = j.content
+              ? j.content.length > 20
+                ? j.content.slice(0, 20) + "..."
+                : j.content
+              : ""
+            return (
+              <Card
+                key={j.id}
+                className="-ml-2 overflow-visible border-b border-border bg-transparent p-2 shadow-none ring-0 hover:bg-muted/50"
+              >
+                <div className="-mt-4 -ml-4 flex items-start gap-5">
+                  <div className="self-center">
+                    <Checkbox
+                      className="size-4"
+                      checked={selectedIds.has(j.id)}
+                      onCheckedChange={(val) =>
+                        toggleCheckbox(j.id, Boolean(val))
+                      }
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-start justify-between">
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button
+                            className="truncate p-0 text-left text-sm"
+                            variant="ghost"
+                            onClick={(e) => onClickContent(e, j)}
+                          >
+                            {shownMobile}
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="h-full max-h-[65vh] w-full sm:h-auto sm:max-w-3xl md:max-w-4xl">
+                          <DialogHeader>
+                            <DialogTitle>{shown}</DialogTitle>
+                            <DialogDescription>
+                              Saved date{" "}
+                              {j.createdAtIso ? (
+                                <time dateTime={j.createdAtIso}>
+                                  {j.createdAtDisplay ??
+                                    `${new Date(j.createdAtIso).toLocaleDateString("en-GB")} at ${new Date(j.createdAtIso).toLocaleTimeString("en-GB", { hour12: false })}`}
+                                </time>
+                              ) : (
+                                "-"
+                              )}
+                            </DialogDescription>
+                          </DialogHeader>
+                          <div className="-mx-4 no-scrollbar max-h-[50vh] overflow-y-auto px-4">
+                            <p className="mb-4 leading-normal">
+                              {active?.content}
+                            </p>
+                          </div>
+                        </DialogContent>
+                      </Dialog>
+
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button
+                            variant="destructive"
+                            className="-mr-6 size-6 self-center"
+                          >
+                            <Trash2 />
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>
+                              Are you sure deleting the journal?
+                            </AlertDialogTitle>
+                            <AlertDialogDescription>
+                              This action cannot be undone. This will
+                              permanently delete your journal from our servers.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction
+                              onClick={() => onDelete([j.id])}
+                              disabled={isLoading}
+                            >
+                              Delete
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </div>
+
+                    <div className="mt-1 text-xs text-muted-foreground">
+                      {j.createdAtIso ? (
+                        <time dateTime={j.createdAtIso}>
+                          {j.createdAtDisplay ??
+                            `${new Date(j.createdAtIso).toLocaleDateString("en-GB")} at ${new Date(j.createdAtIso).toLocaleTimeString("en-GB", { hour12: false })}`}
+                        </time>
+                      ) : (
+                        "-"
+                      )}
+                    </div>
+                  </div>
                 </div>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>
-                    Are you sure deleting selected journals?
-                  </AlertDialogTitle>
-                  <AlertDialogDescription>
-                    This action cannot be undone. This will permanently delete
-                    your journals from our servers.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction
-                    onClick={() => onDelete(Array.from(selectedIds))}
-                    disabled={selectedIds.size === 0 || isLoading}
-                  >
-                    Delete
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-          </TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {initialJournals.map((j) => {
-          const shown = truncate(j.content)
-          return (
-            <TableRow key={j.id}>
-              <TableCell className="w-30">
-                <Checkbox
-                  className="ml-1.5"
-                  checked={selectedIds.has(j.id)}
-                  onCheckedChange={(val) => toggleCheckbox(j.id, Boolean(val))}
-                />
-              </TableCell>
-              <TableCell className="min-w-0 font-medium">
-                <div className="truncate">
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        onClick={(e) => {
-                          onClickContent(e, j)
-                        }}
-                      >
-                        {shown}
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent>
-                      <DialogHeader>
-                        <DialogTitle>{shown}</DialogTitle>
-                        <DialogDescription>
-                          Saved date{" "}
-                          {j.createdAtIso ? (
-                            <time dateTime={j.createdAtIso}>
-                              {" "}
-                              {j.createdAtDisplay ??
-                                `${new Date(j.createdAtIso).toLocaleDateString("en-GB")} at ${new Date(j.createdAtIso).toLocaleTimeString("en-GB", { hour12: false })}`}{" "}
-                            </time>
-                          ) : (
-                            "-"
-                          )}
-                        </DialogDescription>
-                      </DialogHeader>
-                      <div className="-mx-4 no-scrollbar max-h-[50vh] overflow-y-auto px-4">
-                        <p className="mb-4 leading-normal">{active?.content}</p>
-                      </div>
-                    </DialogContent>
-                  </Dialog>
+              </Card>
+            )
+          })}
+        </div>
+      </div>
+
+      {/* Desktop table for md+ */}
+      <div className="hidden md:block">
+        <Table className="w-full table-auto">
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-12 md:w-30">
+                <div className="flex items-center gap-2.5">
+                  <Checkbox
+                    className="ml-1.5 size-4"
+                    checked={
+                      allSelected
+                        ? true
+                        : someSelected
+                          ? "indeterminate"
+                          : false
+                    }
+                    onCheckedChange={() => toggleSelectAll()}
+                  />
+                  Select All
                 </div>
-              </TableCell>
-              <TableCell className="w-36">
-                {j.createdAtIso ? (
-                  <time dateTime={j.createdAtIso}>
-                    {" "}
-                    {j.createdAtDisplay ??
-                      `${new Date(j.createdAtIso).toLocaleDateString("en-GB")} at ${new Date(j.createdAtIso).toLocaleTimeString("en-GB", { hour12: false })}`}{" "}
-                  </time>
-                ) : (
-                  "-"
-                )}
-              </TableCell>
-              <TableCell className="w-12 text-right">
+              </TableHead>
+
+              <TableHead className="max-w-[60vw] min-w-0 md:max-w-none">
+                Content
+              </TableHead>
+              <TableHead className="hidden w-36 text-left sm:table-cell md:w-48">
+                Date
+              </TableHead>
+              <TableHead className="w-16 text-right">
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
-                    <Button
-                      variant="destructive"
-                      size="icon"
-                      className="size-8"
-                    >
-                      <Trash2 />
-                    </Button>
+                    <div className="flex items-center justify-end gap-2">
+                      Delete selected
+                      <Button
+                        variant="destructive"
+                        size="icon"
+                        className="size-8"
+                        disabled={selectedIds.size === 0}
+                      >
+                        <Trash2 />
+                      </Button>
+                    </div>
                   </AlertDialogTrigger>
                   <AlertDialogContent>
                     <AlertDialogHeader>
                       <AlertDialogTitle>
-                        Are you sure deleting the journal?
+                        Are you sure deleting selected journals?
                       </AlertDialogTitle>
                       <AlertDialogDescription>
                         This action cannot be undone. This will permanently
-                        delete your journal from our servers.
+                        delete your journals from our servers.
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                       <AlertDialogCancel>Cancel</AlertDialogCancel>
                       <AlertDialogAction
-                        onClick={() => onDelete([j.id])}
-                        disabled={isLoading}
+                        onClick={() => onDelete(Array.from(selectedIds))}
+                        disabled={selectedIds.size === 0 || isLoading}
                       >
                         Delete
                       </AlertDialogAction>
                     </AlertDialogFooter>
                   </AlertDialogContent>
                 </AlertDialog>
-              </TableCell>
+              </TableHead>
             </TableRow>
-          )
-        })}
-      </TableBody>
-    </Table>
+          </TableHeader>
+          <TableBody>
+            {initialJournals.map((j) => {
+              const shown = truncate(j.content)
+              return (
+                <TableRow key={j.id}>
+                  <TableCell className="w-12 md:w-30">
+                    <Checkbox
+                      className="ml-1.5"
+                      checked={selectedIds.has(j.id)}
+                      onCheckedChange={(val) =>
+                        toggleCheckbox(j.id, Boolean(val))
+                      }
+                    />
+                  </TableCell>
+                  <TableCell className="w-full max-w-[60vw] min-w-0 font-medium md:max-w-3xl">
+                    <div className="truncate">
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button
+                            className="text-left"
+                            variant="ghost"
+                            onClick={(e) => {
+                              onClickContent(e, j)
+                            }}
+                          >
+                            {shown}
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="h-full max-h-[90vh] w-full sm:h-auto sm:max-w-3xl md:max-w-4xl">
+                          <DialogHeader>
+                            <DialogTitle>{shown}</DialogTitle>
+                            <DialogDescription>
+                              Saved date{" "}
+                              {j.createdAtIso ? (
+                                <time dateTime={j.createdAtIso}>
+                                  {" "}
+                                  {j.createdAtDisplay ??
+                                    `${new Date(j.createdAtIso).toLocaleDateString("en-GB")} at ${new Date(j.createdAtIso).toLocaleTimeString("en-GB", { hour12: false })}`}{" "}
+                                </time>
+                              ) : (
+                                "-"
+                              )}
+                            </DialogDescription>
+                          </DialogHeader>
+                          <div className="-mx-4 no-scrollbar max-h-[50vh] overflow-y-auto px-4">
+                            <p className="mb-4 leading-normal">
+                              {active?.content}
+                            </p>
+                          </div>
+                        </DialogContent>
+                      </Dialog>
+                    </div>
+                  </TableCell>
+                  <TableCell className="hidden w-36 sm:table-cell md:w-48">
+                    {j.createdAtIso ? (
+                      <time dateTime={j.createdAtIso}>
+                        {" "}
+                        {j.createdAtDisplay ??
+                          `${new Date(j.createdAtIso).toLocaleDateString("en-GB")} at ${new Date(j.createdAtIso).toLocaleTimeString("en-GB", { hour12: false })}`}{" "}
+                      </time>
+                    ) : (
+                      "-"
+                    )}
+                  </TableCell>
+                  <TableCell className="w-12 text-right">
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button
+                          variant="destructive"
+                          size="icon-sm"
+                          className="size-6"
+                        >
+                          <Trash2 />
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>
+                            Are you sure deleting the journal?
+                          </AlertDialogTitle>
+                          <AlertDialogDescription>
+                            This action cannot be undone. This will permanently
+                            delete your journal from our servers.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction
+                            onClick={() => onDelete([j.id])}
+                            disabled={isLoading}
+                          >
+                            Delete
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </TableCell>
+                </TableRow>
+              )
+            })}
+          </TableBody>
+        </Table>
+      </div>
+    </div>
   )
 }

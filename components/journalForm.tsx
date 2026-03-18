@@ -171,7 +171,7 @@ export function JournalForm({
                 Processing
               </Button>
             ) : (
-              savedEntry || "No entry yet"
+              savedEntry || <p className="text-muted">No journal yet</p>
             )}
           </CardContent>
         </Card>

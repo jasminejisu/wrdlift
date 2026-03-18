@@ -34,7 +34,7 @@ export default async function Header() {
           <>
             <Link
               href="/journals"
-              className="text-sm text-muted-foreground hover:underline sm:inline-block"
+              className="cursor-point text-xs hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50"
             >
               My journals
             </Link>
