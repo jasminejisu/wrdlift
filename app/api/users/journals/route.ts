@@ -39,6 +39,7 @@ export async function GET() {
   try {
     const { data: journals, count } = await getJournals(supabase, data.user.id)
     return NextResponse.json({ seccess: true, data: journals, count })
-  } catch (error) {}
-  return NextResponse.json({ success: false, error: error }, { status: 500 })
+  } catch (error) {
+    return NextResponse.json({ success: false, error: error }, { status: 500 })
+  }
 }

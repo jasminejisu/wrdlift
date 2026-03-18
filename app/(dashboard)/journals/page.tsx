@@ -9,18 +9,16 @@ interface PageProps {
   searchParams: Promise<{
     page?: string
     pageSize?: string
-    sort_by?: "created_at" | "title"
+    sortBy?: "created_at"
     query?: string
   }>
 }
 
-export default async function JournalsPage({
-  searchParams: rawSearchParams,
-}: PageProps) {
-  const searchParams = await rawSearchParams
-  const rawPage = searchParams.page
-  const page = rawPage ? Math.max(1, parseInt(rawPage, 10) || 1) : 1
-  const pageSize = Number(searchParams.pageSize ?? 8)
+export default async function JournalsPage({ searchParams }: PageProps) {
+  const params = await searchParams
+  const p = params.page
+  const page = p ? Math.max(1, parseInt(p, 10) || 1) : 1
+  const pageSize = Number(params.pageSize ?? 8)
 
   const supabase = await createClient()
   const { data, error } = await supabase.auth.getUser()
@@ -39,7 +37,7 @@ export default async function JournalsPage({
     ...j,
     createdAtIso: j.created_at ?? null,
     createdAtDisplay: j.created_at
-      ? new Date(j.created_at).toLocaleString("en-GB", { hour12: false })
+      ? `${new Date(j.created_at).toLocaleDateString("en-GB")} at ${new Date(j.created_at).toLocaleTimeString("en-GB", { hour12: false })}`
       : null,
   }))
 
@@ -54,7 +52,12 @@ export default async function JournalsPage({
           </h1>
 
           <div className="feature-card rounded-lg bg-indigo-50 p-6 shadow-xl dark:bg-indigo-900/40">
-            <MyJournals initialJournals={journalsForClient} />
+            <MyJournals
+              initialJournals={journalsForClient}
+              page={page}
+              pageCount={pageCount}
+              pageSize={pageSize}
+            />
             <PaginationSimple
               page={page}
               pageCount={pageCount}

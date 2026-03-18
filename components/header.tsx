@@ -22,7 +22,7 @@ export default async function Header() {
           <>
             <Link
               href="/login"
-              className="hidden text-sm text-muted-foreground hover:underline sm:inline-block"
+              className="text-sm text-muted-foreground hover:underline sm:inline-block"
             >
               Log in
             </Link>
@@ -34,7 +34,7 @@ export default async function Header() {
           <>
             <Link
               href="/journals"
-              className="hidden text-sm text-muted-foreground hover:underline sm:inline-block"
+              className="text-sm text-muted-foreground hover:underline sm:inline-block"
             >
               My journals
             </Link>
