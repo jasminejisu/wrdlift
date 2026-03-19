@@ -1,19 +1,28 @@
-import { Geist, Geist_Mono, Inter } from "next/font/google"
-
-import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { cn } from "@/lib/utils"
 import { Toaster } from "@/components/ui/sonner"
 import Footer from "@/components/footer"
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-sans" })
+import type { Metadata } from "next"
+import { DM_Sans, Gelasio, Inconsolata } from "next/font/google"
+import "./globals.css"
 
-const fontMono = Geist_Mono({
+const fontSans = DM_Sans({
+  subsets: ["latin"],
+  variable: "--font-sans",
+})
+
+const fontSerif = Gelasio({
+  subsets: ["latin"],
+  variable: "--font-serif",
+})
+
+const fontMono = Inconsolata({
   subsets: ["latin"],
   variable: "--font-mono",
 })
 
-export const metadata = {
+export const metadata: Metadata = {
   title: {
     template: "%s | Wrdlift",
     default: "Wrdlift",
@@ -32,12 +41,14 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={cn("font-sans", inter.variable)}
+      className={cn("font-sans", fontSans.variable)}
     >
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
-      <body>
+      <body
+        className={`${fontSans.variable} ${fontSerif.variable} ${fontMono.variable} antialiased`}
+      >
         <Toaster />
         <ThemeProvider>
           {children}

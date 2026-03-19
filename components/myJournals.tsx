@@ -58,7 +58,7 @@ export function MyJournals({
 
   function truncate(text?: string) {
     if (!text) return ""
-    return text.length > 44 ? text.slice(0, 44) + "..." : text
+    return text.length > 60 ? text.slice(0, 60) + "..." : text
   }
 
   function toggleCheckbox(id: string, checked: boolean) {
@@ -125,7 +125,7 @@ export function MyJournals({
         <div className="mb-4 flex items-center justify-between">
           <div className="flex items-center gap-5">
             <Checkbox
-              className="-ml-4 size-4"
+              className="size-4"
               checked={
                 allSelected ? true : someSelected ? "indeterminate" : false
               }
@@ -135,7 +135,7 @@ export function MyJournals({
           </div>
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <div className="-mr-4 flex items-center gap-2">
+              <div className="flex items-center gap-2">
                 <span className="text-sm">Delete</span>
                 <Button
                   variant="destructive"
@@ -180,9 +180,9 @@ export function MyJournals({
             return (
               <Card
                 key={j.id}
-                className="-ml-2 overflow-visible border-b border-border bg-transparent p-2 shadow-none ring-0 hover:bg-muted/50"
+                className="-mx-4 overflow-visible border-b border-border bg-transparent p-2 px-4 shadow-none ring-0 hover:bg-muted/50 md:mx-0 md:px-0"
               >
-                <div className="-mt-4 -ml-4 flex items-start gap-5">
+                <div className="flex items-center gap-5">
                   <div className="self-center">
                     <Checkbox
                       className="size-4"
@@ -193,7 +193,7 @@ export function MyJournals({
                     />
                   </div>
                   <div className="flex-1">
-                    <div className="flex items-start justify-between">
+                    <div className="flex items-center justify-between">
                       <Dialog>
                         <DialogTrigger asChild>
                           <Button
@@ -219,7 +219,7 @@ export function MyJournals({
                               )}
                             </DialogDescription>
                           </DialogHeader>
-                          <div className="-mx-4 no-scrollbar max-h-[50vh] overflow-y-auto px-4">
+                          <div className="no-scrollbar max-h-[50vh] overflow-y-auto px-4">
                             <p className="mb-4 leading-normal">
                               {active?.content}
                             </p>
@@ -231,7 +231,8 @@ export function MyJournals({
                         <AlertDialogTrigger asChild>
                           <Button
                             variant="destructive"
-                            className="-mr-6 size-6 self-center"
+                            size="icon-sm"
+                            className="mt-4 self-center"
                           >
                             <Trash2 />
                           </Button>
@@ -285,7 +286,7 @@ export function MyJournals({
               <TableHead className="w-12 md:w-30">
                 <div className="flex items-center gap-2.5">
                   <Checkbox
-                    className="ml-1.5 size-4"
+                    className="size-5.5"
                     checked={
                       allSelected
                         ? true
@@ -309,7 +310,7 @@ export function MyJournals({
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
                     <div className="flex items-center justify-end gap-2">
-                      Delete selected
+                      Delete
                       <Button
                         variant="destructive"
                         size="icon"
@@ -351,7 +352,6 @@ export function MyJournals({
                 <TableRow key={j.id}>
                   <TableCell className="w-12 md:w-30">
                     <Checkbox
-                      className="ml-1.5"
                       checked={selectedIds.has(j.id)}
                       onCheckedChange={(val) =>
                         toggleCheckbox(j.id, Boolean(val))
@@ -372,7 +372,7 @@ export function MyJournals({
                             {shown}
                           </Button>
                         </DialogTrigger>
-                        <DialogContent className="h-full max-h-[90vh] w-full sm:h-auto sm:max-w-3xl md:max-w-4xl">
+                        <DialogContent className="h-full max-h-[80vh] w-full sm:h-auto sm:max-w-3xl md:max-w-3xl">
                           <DialogHeader>
                             <DialogTitle>{shown}</DialogTitle>
                             <DialogDescription>
@@ -388,7 +388,7 @@ export function MyJournals({
                               )}
                             </DialogDescription>
                           </DialogHeader>
-                          <div className="-mx-4 no-scrollbar max-h-[50vh] overflow-y-auto px-4">
+                          <div className="no-scrollbar -mx-4 max-h-[50vh] overflow-y-auto px-4">
                             <p className="mb-4 leading-normal">
                               {active?.content}
                             </p>
@@ -413,8 +413,8 @@ export function MyJournals({
                       <AlertDialogTrigger asChild>
                         <Button
                           variant="destructive"
-                          size="icon-sm"
-                          className="size-6"
+                          size="icon"
+                          className="size-8"
                         >
                           <Trash2 />
                         </Button>

@@ -14,7 +14,7 @@ import { Textarea } from "./ui/textarea"
 import { toast } from "sonner"
 import { Spinner } from "./ui/spinner"
 import { createClient } from "@/lib/auth/supabase"
-import { SkeletonCard } from "./ui/skeletonCard"
+import { Skeleton } from "./ui/skeleton"
 
 export function JournalForm({
   className,
@@ -59,7 +59,7 @@ export function JournalForm({
       } = await supabase.auth.getSession()
       const accessToken = session?.access_token
 
-      const res = await fetch("/api/journals", {
+      const res = await fetch("/api/users/journals", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -81,7 +81,7 @@ export function JournalForm({
 
       const repeatedWords = getRepeatWords(entry)
 
-      const aiRes = await fetch("/api/journalSuggestions", {
+      const aiRes = await fetch("/api/users/journals/suggestions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -130,7 +130,15 @@ export function JournalForm({
         <FieldGroup className="w-full">
           <Field>
             {isLoading ? (
-              <SkeletonCard />
+              <Card>
+                <CardHeader>
+                  <Skeleton className="h-4 w-2/3" />
+                  <Skeleton className="h-4 w-1/2" />
+                </CardHeader>
+                <CardContent>
+                  <Skeleton className="box-border min-h-100 w-full rounded-md p-2" />
+                </CardContent>
+              </Card>
             ) : (
               <Card>
                 <CardHeader>
@@ -145,7 +153,7 @@ export function JournalForm({
                     <form onSubmit={onSave}>
                       <Field>
                         <Textarea
-                          className="w-full"
+                          className="min-h-100 w-full"
                           value={content}
                           onChange={(e) => setContent(e.target.value)}
                         />
@@ -163,22 +171,26 @@ export function JournalForm({
       </div>
 
       <div className="w-full space-y-4 lg:w-80">
-        <Card>
-          <CardContent className="min-h-24">
+        <Card className={savedEntry && !isLoading ? "bg-accent" : ""}>
+          <CardContent className="min-h-36">
             {isLoading ? (
-              <Button variant="secondary" disabled size="sm">
-                <Spinner data-icon="inline-start" />
-                Processing
-              </Button>
+              <Skeleton className="box-border min-h-93 w-full rounded-md p-2" />
             ) : (
-              savedEntry || <p className="text-muted">No journal yet</p>
+              savedEntry || (
+                <p className="text-muted-foreground">No journal yet</p>
+              )
             )}
           </CardContent>
         </Card>
 
         <Card>
           {isLoading ? (
-            <Button variant="secondary" disabled size="sm" className="m-5">
+            <Button
+              variant="secondary"
+              disabled
+              size="lg"
+              className="mr-3 ml-3"
+            >
               <Spinner data-icon="inline-start" />
               Processing
             </Button>
@@ -193,15 +205,10 @@ export function JournalForm({
               </CardDescription>
             </CardHeader>
           )}
-          <CardContent>
-            <CardDescription>Want to make it even better?</CardDescription>
 
-            {isLoading ? (
-              <Button variant="secondary" disabled size="sm">
-                <Spinner data-icon="inline-start" />
-                Processing
-              </Button>
-            ) : (
+          {savedEntry && !isLoading && (
+            <CardContent>
+              <CardDescription>Want to make it even better?</CardDescription>
               <ul>
                 {suggestions.map((item, idx) => (
                   <li key={idx} className="mb-2">
@@ -212,8 +219,8 @@ export function JournalForm({
                   </li>
                 ))}
               </ul>
-            )}
-          </CardContent>
+            </CardContent>
+          )}
         </Card>
       </div>
     </div>

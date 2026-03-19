@@ -51,7 +51,7 @@ export default async function JournalsPage({ searchParams }: PageProps) {
             Your Journals
           </h1>
 
-          <div className="feature-card rounded-lg bg-indigo-50 p-6 shadow-xl dark:bg-indigo-900/40">
+          <div className="feature-card rounded-lg bg-card p-6 shadow-xl dark:bg-card">
             <MyJournals
               initialJournals={journalsForClient}
               page={page}

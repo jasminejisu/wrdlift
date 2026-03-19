@@ -22,7 +22,7 @@ export function PaginationSimple({ page, pageCount, pageSize }: Props) {
   const pages = Array.from({ length: end - start + 1 }, (_, i) => start + i)
 
   return (
-    <div className="feature-card mt-2 rounded-lg border border-muted bg-indigo-50 p-2 shadow-xl dark:bg-indigo-900/40">
+    <div className="feature-card mt-2 rounded-lg border border-muted bg-card p-2 shadow-xl dark:bg-card">
       <Pagination>
         <PaginationContent>
           <PaginationItem>
