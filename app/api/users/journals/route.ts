@@ -16,13 +16,17 @@ export async function POST(request: Request) {
     )
   }
 
-  const words = (content || "")
-    .trim()
-    .toLowerCase()
-    .split(/\s+/)
-    .filter(Boolean)
+  const text = content.trim().toLowerCase()
+  const words: string[] = text.length
+    ? text
+        .split(/\s+/)
+        .filter((s: string | unknown[]): s is string => s.length > 0)
+    : []
+
   const counts: Record<string, number> = {}
-  words.forEach((w) => (counts[w] = (counts[w] || 0) + 1))
+  for (const w of words) {
+    counts[w] = (counts[w] ?? 0) + 1
+  }
   const repeatedWords = Object.entries(counts)
     .filter(([, c]) => c > 1)
     .map(([w]) => w)
