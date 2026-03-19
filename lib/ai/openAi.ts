@@ -14,6 +14,11 @@ export async function getJournalSuggestions({
     apiKey: token,
   })
 
+  const repeatLine =
+    repeatedWords && repeatedWords.length > 0
+      ? `\nRepeated words detected: ${repeatedWords.join(", ")}\n`
+      : ""
+
   const prompt = `
   You are an English teacher with over 30 years of experience teaching English to foreign learners.
 
@@ -35,11 +40,10 @@ Example:
   ]
 }
 
+
 Journal entry:
 "${journalContent}"
-
-Repeated words detected:
-${repeatedWords.join(", ")} d
+${repeatLine}
 
 Return **ONLY valid JSON**
 `
@@ -55,5 +59,14 @@ Return **ONLY valid JSON**
     top_p: 1,
   })
 
-  return response.choices[0].message.content
+  const text = response?.choices?.[0]?.message?.content
+
+  if (typeof text === "string") {
+    try {
+      return JSON.parse(text)
+    } catch {
+      return text
+    }
+  }
+  return text
 }

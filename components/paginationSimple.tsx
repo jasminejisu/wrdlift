@@ -42,7 +42,7 @@ export function PaginationSimple({ page, pageCount, pageSize }: Props) {
                   href={`?page=1&pageSize=${pageSize}`}
                   isActive={1 === page}
                 >
-                  <PaginationEllipsis />
+                  1
                 </PaginationLink>
               </PaginationItem>
               {start > 2 && (
@@ -76,7 +76,8 @@ export function PaginationSimple({ page, pageCount, pageSize }: Props) {
                   href={`?page=${pageCount}&pageSize=${pageSize}`}
                   isActive={pageCount === page}
                 >
-                  <PaginationEllipsis />
+                  {" "}
+                  {pageCount}
                 </PaginationLink>
               </PaginationItem>
             </>

@@ -27,11 +27,15 @@ export default async function JournalsPage({ searchParams }: PageProps) {
     return redirect("/login")
   }
 
-  const { data: journals, pageCount } = await getJournals<Journal>(
-    supabase,
-    data.user.id,
-    { page, pageSize }
-  )
+  const {
+    data: journals,
+    pageCount,
+    page: effectivePage,
+  } = await getJournals<Journal>(supabase, data.user.id, { page, pageSize })
+
+  if (p && String(effectivePage) !== String(p)) {
+    return redirect(`/journals?page=${effectivePage}&pageSize=${pageSize}`)
+  }
 
   const journalsForClient: Journal[] = (journals ?? []).map((j: Journal) => ({
     ...j,
@@ -54,12 +58,12 @@ export default async function JournalsPage({ searchParams }: PageProps) {
           <div className="feature-card rounded-lg bg-card p-6 shadow-xl dark:bg-card">
             <MyJournals
               initialJournals={journalsForClient}
-              page={page}
+              page={effectivePage}
               pageCount={pageCount}
               pageSize={pageSize}
             />
             <PaginationSimple
-              page={page}
+              page={effectivePage}
               pageCount={pageCount}
               pageSize={pageSize}
             />

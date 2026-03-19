@@ -3,15 +3,16 @@ import { SupabaseClient } from "@supabase/supabase-js"
 type SaveEntryProps = {
   content: string
   userId: string
+  suggestions: unknown
 }
 
 export async function saveEntry(
   supabase: SupabaseClient,
-  { content, userId }: SaveEntryProps
+  { content, userId, suggestions }: SaveEntryProps
 ) {
   return await supabase
     .from("journals")
-    .insert({ content, user_id: userId })
+    .insert({ content, user_id: userId, suggestions })
     .select()
 }
 
@@ -30,8 +31,20 @@ export async function getJournals<T = unknown>(
     query?: string
   } = {}
 ) {
-  const p = Math.max(1, page)
-  const start = (p - 1) * pageSize
+  const requested = Math.max(1, page)
+
+  const countRes = await supabase
+    .from("journals")
+    .select("id", { count: "exact", head: true })
+    .eq("user_id", userId)
+
+  if (countRes.error) throw countRes.error
+
+  const total = countRes.count ?? 0
+  const pageCount = total ? Math.ceil(total / pageSize) : 0
+
+  const effectivePage = pageCount === 0 ? 1 : Math.min(requested, pageCount)
+  const start = (effectivePage - 1) * pageSize
   const end = start + pageSize - 1
 
   const res = await supabase
@@ -45,8 +58,8 @@ export async function getJournals<T = unknown>(
   if (error) {
     throw error
   }
-  const pageCount = count ? Math.ceil(count / pageSize) : 0
-  return { data, count, pageCount, pageSize }
+
+  return { data, count: total, pageCount, page: effectivePage, pageSize }
 }
 
 export async function deleteJournals(

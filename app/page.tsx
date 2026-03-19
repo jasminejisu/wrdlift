@@ -37,7 +37,7 @@ export default function Page() {
 
         <section className="grid gap-8 sm:grid-cols-3">
           <div className="feature-card left dark:bg-card40 rounded-lg bg-card p-6 text-center text-foreground shadow-xl">
-            <h3 className="text-lg font-semibold">Word Count</h3>
+            <h3 className="text-lg font-semibold">🧮 Word Count</h3>
             <p className="mt-2 text-sm text-muted-foreground">
               See your entry&apos;s length instantly to track progress over
               time.
@@ -46,7 +46,7 @@ export default function Page() {
 
           <div className="feature-card rounded-lg bg-card p-6 text-center text-foreground shadow-xl dark:bg-card">
             <h3 className="text-lg font-semibold">
-              Learner-Focused Suggestions
+              🪄 Learner-Focused Suggestions
             </h3>
             <p className="mt-2 text-sm text-muted-foreground">
               Receive tailored tips aimed at non-native speakers for clearer,
@@ -55,7 +55,7 @@ export default function Page() {
           </div>
 
           <div className="feature-card right rounded-lg bg-card p-6 text-center text-foreground shadow-xl dark:bg-card">
-            <h3 className="text-lg font-semibold">Tone & Grammar</h3>
+            <h3 className="text-lg font-semibold">✍🏼 Tone & Grammar</h3>
             <p className="mt-2 text-sm text-muted-foreground">
               Get corrections and tone advice so your writing matches the
               intent.

@@ -15,6 +15,7 @@ import { toast } from "sonner"
 import { Spinner } from "./ui/spinner"
 import { createClient } from "@/lib/auth/supabase"
 import { Skeleton } from "./ui/skeleton"
+import { highlightText } from "@/lib/highlight"
 
 export function JournalForm({
   className,
@@ -76,41 +77,12 @@ export function JournalForm({
       }
 
       toast.success("Journal saved successfully")
-      const entry = data.data?.[0]?.content || ""
-      setSavedEntry(entry)
 
-      const repeatedWords = getRepeatWords(entry)
-
-      const aiRes = await fetch("/api/users/journals/suggestions", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          journalContent: entry,
-          repeatedWords: repeatedWords.map((rw) => rw.word),
-        }),
-      })
-
-      if (!aiRes.ok) {
-        console.error("Ai response failed.")
-      } else {
-        const aiData = await aiRes.json()
-        let replacements: {
-          originalWord: string
-          suggestedWord: string
-          explanation: string
-        }[] = []
-        if (typeof aiData.suggestions === "string") {
-          try {
-            const parsed = JSON.parse(aiData.suggestions)
-            replacements = parsed.replacements || []
-          } catch (err) {
-            toast.error("Failed to suggest improvements.")
-          }
-        } else if (aiData.suggestions?.replacements) {
-          replacements = aiData.suggestions.replacements
-        }
-        setSuggetions(replacements)
-      }
+      const entry = data.data?.[0]
+      setSavedEntry(entry?.content || "")
+      setSuggetions(
+        entry?.suggestions?.replacements || entry?.suggestions || []
+      )
 
       setContent("")
     } catch (err) {
@@ -121,8 +93,10 @@ export function JournalForm({
     }
   }
 
-  const countedWords = countWords(savedEntry)
+  const liveRepeated = getRepeatWords(content)
   const repeatedWords = getRepeatWords(savedEntry)
+  const liveCounted = countWords(content)
+  const countedWords = countWords(savedEntry)
 
   return (
     <div className="flex flex-col gap-6 lg:flex-row" {...props}>
@@ -176,7 +150,7 @@ export function JournalForm({
             {isLoading ? (
               <Skeleton className="box-border min-h-93 w-full rounded-md p-2" />
             ) : (
-              savedEntry || (
+              highlightText(savedEntry, suggestions) || (
                 <p className="text-muted-foreground">No journal yet</p>
               )
             )}
@@ -196,26 +170,37 @@ export function JournalForm({
             </Button>
           ) : (
             <CardHeader>
-              Word counter: {countedWords} words
+              Word counter:{" "}
+              {content.trim().length > 0 ? liveCounted : countedWords} words
               <CardDescription>
                 Repeated words:{" "}
-                {repeatedWords.length > 0
-                  ? repeatedWords.map((rw) => rw.word).join(", ")
-                  : "None"}
+                {savedEntry && !isLoading
+                  ? repeatedWords.length
+                    ? repeatedWords.map((r) => r.word).join(", ")
+                    : "None"
+                  : liveRepeated.length
+                    ? liveRepeated.map((r) => r.word).join(", ")
+                    : "None"}
               </CardDescription>
             </CardHeader>
           )}
 
           {savedEntry && !isLoading && (
             <CardContent>
-              <CardDescription>Want to make it even better?</CardDescription>
+              <CardDescription className="text-primary-background">
+                Want to make it even better?
+              </CardDescription>
               <ul>
-                {suggestions.map((item, idx) => (
-                  <li key={idx} className="mb-2">
-                    <strong>
-                      [{item.originalWord}]→{item.suggestedWord}
-                    </strong>
-                    : {item.explanation}
+                {suggestions.map((s, i) => (
+                  <li key={i} className="flex flex-col items-start gap-2 p-2">
+                    <div className="w-full border-b border-border bg-transparent p-2 hover:bg-muted/50">
+                      <div className="font-medium">
+                        {s.originalWord} 🔍 {s.suggestedWord}
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        {s.explanation}
+                      </div>
+                    </div>
                   </li>
                 ))}
               </ul>

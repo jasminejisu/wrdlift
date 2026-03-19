@@ -37,6 +37,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { Card } from "./ui/card"
+import { highlightText } from "@/lib/highlight"
 
 export function MyJournals({
   initialJournals = [],
@@ -221,9 +222,54 @@ export function MyJournals({
                           </DialogHeader>
                           <div className="no-scrollbar max-h-[50vh] overflow-y-auto px-4">
                             <p className="mb-4 leading-normal">
-                              {active?.content}
+                              {active ? (
+                                highlightText(
+                                  active.content || "",
+                                  Array.isArray(
+                                    active.suggestions?.replacements
+                                  )
+                                    ? active.suggestions.replacements
+                                    : []
+                                )
+                              ) : (
+                                <p className="text-muted-foreground">
+                                  No content
+                                </p>
+                              )}
                             </p>
                           </div>
+
+                          {active?.suggestions?.replacements &&
+                            Array.isArray(active.suggestions.replacements) &&
+                            active.suggestions.replacements.length > 0 && (
+                              <div className="mt-4 space-y-3 border-t pt-4">
+                                <h4 className="text-sm font-semibold">
+                                  Suggestions
+                                </h4>
+                                <ul className="space-y-2">
+                                  {active.suggestions.replacements.map(
+                                    (r, i) => (
+                                      <li key={i} className="text-sm">
+                                        <span className="font-medium text-foreground">
+                                          {r.originalWord}
+                                        </span>
+                                        <span className="mx-2 text-muted-foreground">
+                                          🔍
+                                        </span>
+                                        <span className="font-medium text-accent-foreground">
+                                          {r.suggestedWord}
+                                        </span>
+                                        {r.explanation ? (
+                                          <div className="mt-1 text-xs text-muted-foreground">
+                                            {r.explanation}
+                                          </div>
+                                        ) : null}
+                                      </li>
+                                    )
+                                  )}
+                                </ul>
+                              </div>
+                            )}
                         </DialogContent>
                       </Dialog>
 
@@ -300,7 +346,7 @@ export function MyJournals({
                 </div>
               </TableHead>
 
-              <TableHead className="max-w-[60vw] min-w-0 md:max-w-none">
+              <TableHead className="max-w-[60vw] min-w-0 pl-6 md:max-w-none md:pl-3.5">
                 Content
               </TableHead>
               <TableHead className="hidden w-36 text-left sm:table-cell md:w-48">
@@ -388,10 +434,57 @@ export function MyJournals({
                               )}
                             </DialogDescription>
                           </DialogHeader>
-                          <div className="no-scrollbar -mx-4 max-h-[50vh] overflow-y-auto px-4">
+                          <div className="no-scrollbar max-h-[50vh] overflow-y-auto px-4">
                             <p className="mb-4 leading-normal">
-                              {active?.content}
+                              {active ? (
+                                <div className="mb-4 leading-normal">
+                                  {highlightText(
+                                    active.content || "",
+                                    Array.isArray(
+                                      active.suggestions?.replacements
+                                    )
+                                      ? active.suggestions.replacements
+                                      : []
+                                  )}
+                                </div>
+                              ) : (
+                                <p className="text-muted-foreground">
+                                  No content
+                                </p>
+                              )}
                             </p>
+
+                            {active?.suggestions?.replacements &&
+                              Array.isArray(active.suggestions.replacements) &&
+                              active.suggestions.replacements.length > 0 && (
+                                <div className="mt-4 space-y-3 border-t pt-4">
+                                  <h4 className="text-sm font-semibold">
+                                    Suggestions
+                                  </h4>
+                                  <ul className="space-y-2">
+                                    {active.suggestions.replacements.map(
+                                      (r, i) => (
+                                        <li key={i} className="text-sm">
+                                          <span className="font-medium text-foreground">
+                                            {r.originalWord}
+                                          </span>
+                                          <span className="mx-2 text-muted-foreground">
+                                            🔍
+                                          </span>
+                                          <span className="font-medium text-accent-foreground">
+                                            {r.suggestedWord}
+                                          </span>
+                                          {r.explanation ? (
+                                            <div className="mt-1 text-xs text-muted-foreground">
+                                              {r.explanation}
+                                            </div>
+                                          ) : null}
+                                        </li>
+                                      )
+                                    )}
+                                  </ul>
+                                </div>
+                              )}
                           </div>
                         </DialogContent>
                       </Dialog>
