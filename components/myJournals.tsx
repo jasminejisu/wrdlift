@@ -181,7 +181,7 @@ export function MyJournals({
             return (
               <Card
                 key={j.id}
-                className="-mx-4 overflow-visible border-b border-border bg-transparent p-2 px-4 shadow-none ring-0 hover:bg-muted/50 md:mx-0 md:px-0"
+                className="-mx-4 overflow-visible border-b border-border bg-transparent p-2 px-4 shadow-none ring-0 hover:bg-muted/50"
               >
                 <div className="flex items-center gap-5">
                   <div className="self-center">
@@ -205,7 +205,7 @@ export function MyJournals({
                             {shownMobile}
                           </Button>
                         </DialogTrigger>
-                        <DialogContent className="h-full max-h-[65vh] w-full sm:h-auto sm:max-w-3xl md:max-w-4xl">
+                        <DialogContent className="flex h-full max-h-[65vh] w-full flex-col sm:h-auto sm:max-w-3xl">
                           <DialogHeader>
                             <DialogTitle>{shown}</DialogTitle>
                             <DialogDescription>
@@ -220,7 +220,7 @@ export function MyJournals({
                               )}
                             </DialogDescription>
                           </DialogHeader>
-                          <div className="no-scrollbar max-h-[50vh] overflow-y-auto px-4">
+                          <div className="no-scrollbar max-h-[65vh] overflow-y-auto px-4">
                             <p className="mb-4 leading-normal">
                               {active ? (
                                 highlightText(
@@ -237,39 +237,39 @@ export function MyJournals({
                                 </p>
                               )}
                             </p>
-                          </div>
 
-                          {active?.suggestions?.replacements &&
-                            Array.isArray(active.suggestions.replacements) &&
-                            active.suggestions.replacements.length > 0 && (
-                              <div className="mt-4 space-y-3 border-t pt-4">
-                                <h4 className="text-sm font-semibold">
-                                  Suggestions
-                                </h4>
-                                <ul className="space-y-2">
-                                  {active.suggestions.replacements.map(
-                                    (r, i) => (
-                                      <li key={i} className="text-sm">
-                                        <span className="font-medium text-foreground">
-                                          {r.originalWord}
-                                        </span>
-                                        <span className="mx-2 text-muted-foreground">
-                                          🔍
-                                        </span>
-                                        <span className="font-medium text-accent-foreground">
-                                          {r.suggestedWord}
-                                        </span>
-                                        {r.explanation ? (
-                                          <div className="mt-1 text-xs text-muted-foreground">
-                                            {r.explanation}
-                                          </div>
-                                        ) : null}
-                                      </li>
-                                    )
-                                  )}
-                                </ul>
-                              </div>
-                            )}
+                            {active?.suggestions?.replacements &&
+                              Array.isArray(active.suggestions.replacements) &&
+                              active.suggestions.replacements.length > 0 && (
+                                <div className="mt-4 space-y-3 border-t pt-4">
+                                  <h4 className="text-sm font-semibold">
+                                    Suggestions
+                                  </h4>
+                                  <ul className="space-y-2">
+                                    {active.suggestions.replacements.map(
+                                      (r, i) => (
+                                        <li key={i} className="text-sm">
+                                          <span className="font-medium text-foreground">
+                                            {r.originalWord}
+                                          </span>
+                                          <span className="mx-2 text-muted-foreground">
+                                            🔍
+                                          </span>
+                                          <span className="font-medium text-accent-foreground">
+                                            {r.suggestedWord}
+                                          </span>
+                                          {r.explanation ? (
+                                            <div className="mt-1 text-xs text-muted-foreground">
+                                              {r.explanation}
+                                            </div>
+                                          ) : null}
+                                        </li>
+                                      )
+                                    )}
+                                  </ul>
+                                </div>
+                              )}
+                          </div>
                         </DialogContent>
                       </Dialog>
 
@@ -435,9 +435,9 @@ export function MyJournals({
                             </DialogDescription>
                           </DialogHeader>
                           <div className="no-scrollbar max-h-[50vh] overflow-y-auto px-4">
-                            <p className="mb-4 leading-normal">
+                            <div className="mb-4 leading-normal">
                               {active ? (
-                                <div className="mb-4 leading-normal">
+                                <p className="mb-4 leading-normal">
                                   {highlightText(
                                     active.content || "",
                                     Array.isArray(
@@ -446,13 +446,13 @@ export function MyJournals({
                                       ? active.suggestions.replacements
                                       : []
                                   )}
-                                </div>
+                                </p>
                               ) : (
                                 <p className="text-muted-foreground">
                                   No content
                                 </p>
                               )}
-                            </p>
+                            </div>
 
                             {active?.suggestions?.replacements &&
                               Array.isArray(active.suggestions.replacements) &&

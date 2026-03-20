@@ -2,8 +2,8 @@ import Link from "next/link"
 
 export default function Page() {
   return (
-    <div className="landing-gradient flex h-full min-h-screen w-full flex-col bg-background to-indigo-100 text-foreground">
-      <main className="relative z-10 container mx-auto flex flex-1 flex-col items-center justify-center gap-12 px-6 py-16">
+    <div className="landing-gradient min-h-screen w-full bg-background text-foreground">
+      <main className="relative z-10 mx-auto flex w-full max-w-6xl flex-col items-center gap-12 px-6 py-20">
         <section className="mx-auto max-w-3xl text-center">
           <h1 className="hero-gradient-text text-4xl font-extrabold sm:text-5xl">
             Wrdlift
@@ -35,9 +35,12 @@ export default function Page() {
           </div>
         </section>
 
-        <section className="grid gap-8 sm:grid-cols-3">
+        <section className="grid w-full grid-cols-1 gap-8 sm:grid-cols-3">
           <div className="feature-card left dark:bg-card40 rounded-lg bg-card p-6 text-center text-foreground shadow-xl">
-            <h3 className="text-lg font-semibold">🧮 Word Count</h3>
+            <h3 className="text-lg font-semibold">
+              <p>🔍</p>
+              Word Count
+            </h3>
             <p className="mt-2 text-sm text-muted-foreground">
               See your entry&apos;s length instantly to track progress over
               time.
@@ -46,7 +49,8 @@ export default function Page() {
 
           <div className="feature-card rounded-lg bg-card p-6 text-center text-foreground shadow-xl dark:bg-card">
             <h3 className="text-lg font-semibold">
-              🪄 Learner-Focused Suggestions
+              <p>🪄</p>
+              Learner-Focused Suggestions
             </h3>
             <p className="mt-2 text-sm text-muted-foreground">
               Receive tailored tips aimed at non-native speakers for clearer,
@@ -55,7 +59,10 @@ export default function Page() {
           </div>
 
           <div className="feature-card right rounded-lg bg-card p-6 text-center text-foreground shadow-xl dark:bg-card">
-            <h3 className="text-lg font-semibold">✍🏼 Tone & Grammar</h3>
+            <h3 className="text-lg font-semibold">
+              <p>✍🏼</p>
+              Tone & Grammar
+            </h3>
             <p className="mt-2 text-sm text-muted-foreground">
               Get corrections and tone advice so your writing matches the
               intent.

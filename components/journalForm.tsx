@@ -127,7 +127,8 @@ export function JournalForm({
                     <form onSubmit={onSave}>
                       <Field>
                         <Textarea
-                          className="min-h-100 w-full"
+                          className="min-h-100 w-full resize-none"
+                          style={{ maxHeight: 200 }}
                           value={content}
                           onChange={(e) => setContent(e.target.value)}
                         />
