@@ -7,8 +7,8 @@ export default function Footer() {
             © {new Date().getFullYear()} WrdLift — All rights reserved.
           </span>
           <span className="mt-2 md:mt-0">
-            Made with ❤️ ·{" "}
-            <a className="underline" href="https://github.com">
+            Made with 🤎 ·{" "}
+            <a className="underline" href="https://github.com/heyyyjisu">
               GitHub
             </a>
           </span>

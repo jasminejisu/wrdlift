@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button"
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -205,7 +204,7 @@ export function MyJournals({
                             {shownMobile}
                           </Button>
                         </DialogTrigger>
-                        <DialogContent className="flex h-full max-h-[65vh] w-full flex-col sm:h-auto sm:max-w-3xl">
+                        <DialogContent className="flex max-h-[65vh] w-full flex-col gap-4 p-4 sm:h-auto sm:max-w-xl">
                           <DialogHeader>
                             <DialogTitle>{shown}</DialogTitle>
                             <DialogDescription>
@@ -255,7 +254,7 @@ export function MyJournals({
                                           <span className="mx-2 text-muted-foreground">
                                             🔍
                                           </span>
-                                          <span className="font-medium text-accent-foreground">
+                                          <span className="font-medium text-muted-foreground">
                                             {r.suggestedWord}
                                           </span>
                                           {r.explanation ? (
@@ -418,7 +417,7 @@ export function MyJournals({
                             {shown}
                           </Button>
                         </DialogTrigger>
-                        <DialogContent className="h-full max-h-[80vh] w-full sm:h-auto sm:max-w-3xl md:max-w-3xl">
+                        <DialogContent className="m-4 max-h-[80vh] w-full md:max-w-xl md:p-8">
                           <DialogHeader>
                             <DialogTitle>{shown}</DialogTitle>
                             <DialogDescription>
@@ -471,7 +470,7 @@ export function MyJournals({
                                           <span className="mx-2 text-muted-foreground">
                                             🔍
                                           </span>
-                                          <span className="font-medium text-accent-foreground">
+                                          <span className="font-medium text-muted-foreground">
                                             {r.suggestedWord}
                                           </span>
                                           {r.explanation ? (

@@ -1,9 +1,10 @@
 import { MyJournals } from "@/components/myJournals"
-import { PaginationSimple } from "@/components/paginationSimple"
+
 import { getJournals } from "@/lib/auth/actions"
 import { createClient } from "@/lib/auth/supabaseServer"
 import { redirect } from "next/navigation"
 import type { Journal } from "@/lib/types/journal"
+import { PaginationSimple } from "@/components/paginationSimple"
 
 interface PageProps {
   searchParams: Promise<{
@@ -62,7 +63,6 @@ export default async function JournalsPage({ searchParams }: PageProps) {
               pageCount={pageCount}
               pageSize={pageSize}
             />
-
             <PaginationSimple
               page={effectivePage}
               pageCount={pageCount}

@@ -1,4 +1,5 @@
 import { JournalForm } from "@/components/journalForm"
+import { Button } from "@/components/ui/button"
 import { createClient } from "@/lib/auth/supabaseServer"
 import { redirect } from "next/navigation"
 

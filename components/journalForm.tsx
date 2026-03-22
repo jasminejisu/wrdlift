@@ -16,6 +16,8 @@ import { Spinner } from "./ui/spinner"
 import { createClient } from "@/lib/auth/supabase"
 import { Skeleton } from "./ui/skeleton"
 import { highlightText } from "@/lib/highlight"
+import Link from "next/link"
+import { redirect, useRouter } from "next/navigation"
 
 export function JournalForm({
   className,
@@ -24,9 +26,11 @@ export function JournalForm({
   const [content, setContent] = useState<string>("")
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [savedEntry, setSavedEntry] = useState<string>("")
-  const [suggestions, setSuggetions] = useState<
+  const [suggestions, setSuggestions] = useState<
     { originalWord: string; suggestedWord: string; explanation: string }[]
   >([])
+
+  const router = useRouter()
 
   function getRepeatWords(text: string): { word: string; count: number }[] {
     if (!text) return []
@@ -80,7 +84,7 @@ export function JournalForm({
 
       const entry = data.data?.[0]
       setSavedEntry(entry?.content || "")
-      setSuggetions(
+      setSuggestions(
         entry?.suggestions?.replacements || entry?.suggestions || []
       )
 
@@ -110,7 +114,15 @@ export function JournalForm({
                   <Skeleton className="h-4 w-1/2" />
                 </CardHeader>
                 <CardContent>
-                  <Skeleton className="box-border min-h-100 w-full rounded-md p-2" />
+                  <Field>
+                    <Skeleton className="box-border min-h-100 w-full rounded-md p-2" />
+                    <Button
+                      type="submit"
+                      disabled={isLoading || savedEntry !== ""}
+                    >
+                      {isLoading ? <Spinner /> : "Save"}
+                    </Button>
+                  </Field>
                 </CardContent>
               </Card>
             ) : (
@@ -127,13 +139,18 @@ export function JournalForm({
                     <form onSubmit={onSave}>
                       <Field>
                         <Textarea
+                          placeholder="[Type here...👋🏼]"
                           className="min-h-100 w-screen resize-none"
                           style={{ maxHeight: 200 }}
                           value={content}
                           onChange={(e) => setContent(e.target.value)}
+                          disabled={savedEntry !== ""}
                         />
-                        <Button type="submit" disabled={isLoading}>
-                          {isLoading ? <Spinner /> : "Save"}
+                        <Button
+                          type="submit"
+                          disabled={isLoading || savedEntry !== ""}
+                        >
+                          {isLoading ? <Spinner>Saving...</Spinner> : "Save"}
                         </Button>
                       </Field>
                     </form>
@@ -149,42 +166,32 @@ export function JournalForm({
         <Card className={savedEntry && !isLoading ? "bg-accent" : ""}>
           <CardContent className="min-h-36">
             {isLoading ? (
-              <Skeleton className="box-border min-h-93 w-full rounded-md p-2" />
+              <Skeleton className="box-border min-h-36 w-full rounded-md p-2" />
             ) : (
               highlightText(savedEntry, suggestions) || (
-                <p className="text-muted-foreground">No journal yet</p>
+                <p className="text-muted-foreground">
+                  {content ? content : "[Please enter your journal ✍🏼]"}
+                </p>
               )
             )}
           </CardContent>
         </Card>
 
         <Card>
-          {isLoading ? (
-            <Button
-              variant="secondary"
-              disabled
-              size="lg"
-              className="mr-3 ml-3"
-            >
-              <Spinner data-icon="inline-start" />
-              Processing
-            </Button>
-          ) : (
-            <CardHeader>
-              Word counter:{" "}
-              {content.trim().length > 0 ? liveCounted : countedWords} words
-              <CardDescription>
-                Repeated words:{" "}
-                {savedEntry && !isLoading
-                  ? repeatedWords.length
-                    ? repeatedWords.map((r) => r.word).join(", ")
-                    : "None"
-                  : liveRepeated.length
-                    ? liveRepeated.map((r) => r.word).join(", ")
-                    : "None"}
-              </CardDescription>
-            </CardHeader>
-          )}
+          <CardHeader>
+            Word counter:{" "}
+            {content.trim().length > 0 ? liveCounted : countedWords} words
+            <CardDescription>
+              Repeated words:{" "}
+              {savedEntry && !isLoading
+                ? repeatedWords.length
+                  ? repeatedWords.map((r) => r.word).join(", ")
+                  : "None"
+                : liveRepeated.length
+                  ? liveRepeated.map((r) => r.word).join(", ")
+                  : "None"}
+            </CardDescription>
+          </CardHeader>
 
           {savedEntry && !isLoading && (
             <CardContent>
@@ -208,6 +215,19 @@ export function JournalForm({
             </CardContent>
           )}
         </Card>
+        <Field>
+          {savedEntry && (
+            <Button
+              onClick={() => {
+                setSavedEntry("")
+                setContent("")
+                setSuggestions([])
+              }}
+            >
+              Save a new journal
+            </Button>
+          )}
+        </Field>
       </div>
     </div>
   )

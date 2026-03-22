@@ -63,6 +63,7 @@ export function LoginForm({
     } else {
       toast.error("Log in failed. Please try again.")
     }
+    setIsLoading(false)
   }
 
   return (
