@@ -88,8 +88,8 @@ This one cost me real debugging time. On iOS, any `<input>` or `<textarea>` with
 
 ## Screenshots
 
-![Wrdlift Screenshot](/project/wrdlift-screenshot-3.png)
-![Wrdlift Screenshot](/project/wrdlift-screenshot-2.png)
+![Wrdlift Screenshot](public/wrdlift-screenshot-3.png)
+![Wrdlift Screenshot](public/wrdlift-screenshot-2.png)
 
 ---
 
