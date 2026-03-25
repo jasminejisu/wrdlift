@@ -47,13 +47,13 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
       <body
-        className={`${fontSans.variable} ${fontSerif.variable} ${fontMono.variable} antialiased`}
+        className={`${fontSans.variable} ${fontSerif.variable} ${fontMono.variable} flex min-h-screen flex-col antialiased`}
       >
         <Toaster />
         <ThemeProvider>
-          {children}
-          <Footer />
+          <main className="flex-1">{children}</main>
         </ThemeProvider>
+        <Footer />
       </body>
     </html>
   )
